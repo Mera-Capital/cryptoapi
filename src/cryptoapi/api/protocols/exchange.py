@@ -67,7 +67,7 @@ class ExchangeProtocol(Protocol):
             amount: Decimal,
             order_type: OrderType,
             instrument: Instrument,
-            creds: dict[str, str]
+            creds: dict[str, str],
     ) -> OrderInfo:
         raise NotImplementedError
 
@@ -77,7 +77,7 @@ class ExchangeProtocol(Protocol):
             amount: Decimal,
             order_type: OrderType,
             instrument: Instrument,
-            creds: dict[str, str]
+            creds: dict[str, str],
     ) -> OrderInfo:
         raise NotImplementedError
 
