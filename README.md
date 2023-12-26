@@ -17,16 +17,16 @@ A multi-user library for processing a large number of transactions on different 
 
 #### **Private**  
 - get_position  
-- get_balance  
-- get_operations  
-- close_all_orders  
+- get_equity 
+- get_operations_summary
+- cancel_all_orders  
 - close_position  
-- check_creds  
+- check_credential  
 - buy  
 - sell 
 
 #### **Public**  
-- get_all_history_data
-- get_price  
+- get_candles
+- get_index_price  
 - get_instruments  
-- get_usd_index_price
+- get_quotes
