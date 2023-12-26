@@ -5,6 +5,7 @@ description = "An internal library for integration with the API of cryptocurrenc
 authors = ["Mera Capital"]
 license = "MIT"
 readme = "README.md"
+packages = [{include = "cryptoapi", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"

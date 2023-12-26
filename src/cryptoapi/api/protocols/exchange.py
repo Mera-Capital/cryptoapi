@@ -42,11 +42,11 @@ class ExchangeProtocol(Protocol):
 
     # Private methods
     @abstractmethod
-    async def get_position(self, instrument: Instrument, creds: dict[str, str]) -> Position:
+    async def get_equity(self, currency: str, section: Section, creds: dict[str, str]) -> Equity:
         raise NotImplementedError
 
     @abstractmethod
-    async def get_equity(self, instrument: Instrument, creds: dict[str, str]) -> Equity:
+    async def get_position(self, instrument: Instrument, creds: dict[str, str]) -> Position:
         raise NotImplementedError
 
     @abstractmethod
@@ -82,5 +82,5 @@ class ExchangeProtocol(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def check_credentials(self, instrument: Instrument, creds: dict[str, str]) -> CommandStatus:
+    async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:
         raise NotImplementedError
