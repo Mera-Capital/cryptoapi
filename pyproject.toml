@@ -19,10 +19,11 @@ pylint = "^3.0.3"
 mypy = "^1.8.0"
 pytest = "^7.4.3"
 pytest-asyncio = "^0.23.2"
-anyio = "^4.2.0"
-pytest-tornasync = "^0.6.0.post2"
-pytest-aiohttp = "^1.0.5"
+aioresponses = "^0.7.6"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
