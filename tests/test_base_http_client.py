@@ -1,10 +1,9 @@
 import pytest
-from aioresponses import aioresponses
-
 from cryptoapi.clients.http import BaseHTTPClient, HTTPClientError
+from tests.mocks import MockServer
 
 
-async def test_get_success_response(server_mock: "aioresponses") -> None:
+async def test_get_success_response(server_mock: MockServer) -> None:
     # Arrange
     expected_payload = {"status": "success"}
     server_mock.get("https://example.com", payload=expected_payload, status=200)
@@ -15,7 +14,7 @@ async def test_get_success_response(server_mock: "aioresponses") -> None:
         assert payload == expected_payload
 
 
-async def test_post_success_response(server_mock: "aioresponses") -> None:
+async def test_post_success_response(server_mock: MockServer) -> None:
     # Arrange
     expected_payload = {"status": "success"}
     server_mock.post("https://example.com", payload=expected_payload, status=200)
@@ -26,7 +25,7 @@ async def test_post_success_response(server_mock: "aioresponses") -> None:
         assert payload == expected_payload
 
 
-async def test_base_error(server_mock: "aioresponses") -> None:
+async def test_base_error(server_mock: MockServer) -> None:
     server_mock.get("https://example.com", payload={"status": "error"}, status=400)
     with pytest.raises(HTTPClientError):
         async with BaseHTTPClient() as client:

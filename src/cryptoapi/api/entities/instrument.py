@@ -30,7 +30,7 @@ class Instrument:
     underlying_currency: str
     margin_currency: str
     quoted_currency: str
-    contract_size: int
+    contract_size: Decimal
     commission_percent: Decimal
     min_trade_amount: Decimal
     kind: Kind

@@ -30,16 +30,11 @@ class Deribit(DeribitClient, ExchangeInterface):
             eth = tg.create_task(self.get(self._url.instruments.format(currency="ETH")))
             usdc = tg.create_task(self.get(self._url.instruments.format(currency="USDC")))
             usdt = tg.create_task(self.get(self._url.instruments.format(currency="USDT")))
-        result = [*btc.result(), *eth.result(), *usdc.result(), *usdt.result()]
-        print(result)
-
-        # for instrument_dict in sum(responses, []):
-        #     try:
-        #         instrument = self._mapper.load({'section': 'MAIN', 'model': instrument_dict}, market_dto.Instrument)
-        #         instruments.append(instrument)
-        #     except MappingError:
-        #         continue
-        # return instruments
+        raw_result, instruments = [*btc.result(), *eth.result(), *usdc.result(), *usdt.result()], []
+        for raw in raw_result:
+            instrument = self._mapper.load({"section": Section.MAIN, "model": raw}, Instrument)
+            instruments.append(instrument)
+        return instruments
 
     async def get_candles(
             self,
