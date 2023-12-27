@@ -1,5 +1,5 @@
-from .mapper import MapperProtocol
+from .mapper import MapperInterface
 
 __all__ = [
-    "MapperProtocol",
+    "MapperInterface",
 ]

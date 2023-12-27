@@ -1,3 +1,4 @@
+import asyncio
 from decimal import Decimal
 
 from cryptoapi.api.interfaces import ExchangeInterface, HTTPClientInterface
@@ -24,7 +25,21 @@ class Deribit(DeribitClient, ExchangeInterface):
         self._mapper = _DERIBIT_MAPPER
 
     async def get_instruments(self) -> list[Instrument]:
-        pass
+        async with asyncio.TaskGroup() as tg:
+            btc = tg.create_task(self.get(self._url.instruments.format(currency="BTC")))
+            eth = tg.create_task(self.get(self._url.instruments.format(currency="ETH")))
+            usdc = tg.create_task(self.get(self._url.instruments.format(currency="USDC")))
+            usdt = tg.create_task(self.get(self._url.instruments.format(currency="USDT")))
+        result = [*btc.result(), *eth.result(), *usdc.result(), *usdt.result()]
+        print(result)
+
+        # for instrument_dict in sum(responses, []):
+        #     try:
+        #         instrument = self._mapper.load({'section': 'MAIN', 'model': instrument_dict}, market_dto.Instrument)
+        #         instruments.append(instrument)
+        #     except MappingError:
+        #         continue
+        # return instruments
 
     async def get_candles(
             self,

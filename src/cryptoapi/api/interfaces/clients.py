@@ -23,7 +23,7 @@ class HTTPClientInterface(Protocol):
         raise NotImplementedError
 
 
-class WSSClientProtocol(Protocol):
+class WSSClientInterface(Protocol):
     @abstractmethod
     async def subscribe(self, msg: dict[str, Any]) -> None:
         raise NotImplementedError

@@ -2,13 +2,13 @@ from typing import Any, TypeVar
 
 from adaptix import Retort
 
-from cryptoapi.api.internal import MapperProtocol
+from cryptoapi.api.internal import MapperInterface
 from cryptoapi.api.exceptions import MappingError
 
 T = TypeVar("T")
 
 
-class Mapper(MapperProtocol):
+class Mapper(MapperInterface):
     def __init__(self, retort: Retort) -> None:
         self._retort = retort
 

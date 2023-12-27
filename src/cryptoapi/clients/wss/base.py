@@ -3,10 +3,10 @@ from typing import Any
 
 import websockets
 
-from cryptoapi.api.protocols.clients import WSSClientProtocol
+from cryptoapi.api.interfaces import WSSClientInterface
 
 
-class BaseWSSClient(WSSClientProtocol):
+class BaseWSSClient(WSSClientInterface):
     def __init__(self, uri: str) -> None:
         """
         Initializes the BaseWSSClient instance.

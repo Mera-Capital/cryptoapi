@@ -1,7 +1,7 @@
 from .exchange import ExchangeInterface
-from .clients import HTTPClientInterface
+from .clients import HTTPClientInterface, WSSClientInterface
 
 __all__ = [
     "ExchangeInterface",
-    "HTTPClientInterface",
+    "HTTPClientInterface", "WSSClientInterface",
 ]
