@@ -1,9 +1,7 @@
 from abc import abstractmethod
-from typing import Protocol, Any, TypeVar
+from typing import Protocol, Any
 
 from aiohttp.typedefs import StrOrURL
-
-T = TypeVar('T')
 
 
 class HTTPClientProtocol(Protocol):
@@ -36,10 +34,6 @@ class WSSClientProtocol(Protocol):
 
     @abstractmethod
     async def unsubscribe_all(self, msg: dict[str, Any]) -> None:
-        raise NotImplementedError
-
-    @abstractmethod
-    async def connect(self) -> T:
         raise NotImplementedError
 
     @abstractmethod

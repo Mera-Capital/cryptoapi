@@ -7,14 +7,14 @@ from cryptoapi.api.protocols.clients import WSSClientProtocol
 
 
 class BaseWSSClient(WSSClientProtocol):
-    def __init__(self, wsuri: str) -> None:
+    def __init__(self, uri: str) -> None:
         """
         Initializes the BaseWSSClient instance.
-        :param wsuri: The WebSocket URI.
+        :param uri: The WebSocket URI.
         :return: None
         """
-        self._wsuri = wsuri
-        self.websocket: None | websockets.WebSocketClientProtocol = None
+        self._uri = uri
+        self.socket: None | websockets.WebSocketClientProtocol = None
 
     async def subscribe(self, msg: dict[str, Any]) -> None:
         """
@@ -22,8 +22,8 @@ class BaseWSSClient(WSSClientProtocol):
         :param msg: The message to send to the websocket.
         :return: None
         """
-        websocket = await self.connect()
-        await websocket.send(json.dumps(msg))
+        socket = await self._get_socket()
+        await socket.send(json.dumps(msg))
 
     async def unsubscribe(self, msg: dict[str, Any]) -> None:
         """
@@ -31,8 +31,8 @@ class BaseWSSClient(WSSClientProtocol):
         :param msg: The message to send to the websocket.
         :return: None
         """
-        websocket = await self.connect()
-        await websocket.send(msg)
+        socket = await self._get_socket()
+        await socket.send(json.dumps(msg))
 
     async def unsubscribe_all(self, msg: dict[str, Any]) -> None:
         """
@@ -40,36 +40,36 @@ class BaseWSSClient(WSSClientProtocol):
         :param msg: The message to send to the websocket.
         :return: None
         """
-        websocket = await self.connect()
-        await websocket.send(json.dumps(msg))
-
-    async def connect(self) -> websockets.WebSocketClientProtocol:
-        """
-        Socket manager
-        :return WebSocketClientProtocol: Current or new socket instance
-        """
-        if self.websocket is None or self.websocket.open is False:
-            self.websocket = await self._create_websocket()
-        return self.websocket
+        socket = await self._get_socket()
+        await socket.send(json.dumps(msg))
 
     async def close(self) -> None:
         """
         Closes the websocket connection if it exists.
         :return: None
         """
-        websocket = await self.connect()
-        if websocket:
-            await websocket.close()
+        socket = await self._get_socket()
+        if socket:
+            await socket.close()
 
-    async def _create_websocket(self) -> websockets.WebSocketClientProtocol:
+    async def _get_socket(self) -> websockets.WebSocketClientProtocol:
+        """
+        Socket manager
+        :return WebSocketClientProtocol: Current or new socket instance
+        """
+        if self.socket is None or self.socket.open is False:
+            self.socket = await self._create_socket()
+        return self.socket
+
+    async def _create_socket(self) -> websockets.WebSocketClientProtocol:
         """
         Socket builder
         :return WebSocketClientProtocol: New socket instance
         """
-        return await websockets.connect(self._wsuri)
+        return await websockets.connect(self._uri)
 
     async def __aenter__(self) -> 'BaseWSSClient':
-        await self.connect()
+        await self._get_socket()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:

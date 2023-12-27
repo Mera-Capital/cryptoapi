@@ -1,3 +1,3 @@
 from .base import BaseWSSClient
 
-__all__ = ['BaseWSSClient']
+__all__ = ["BaseWSSClient"]
