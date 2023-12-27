@@ -36,3 +36,9 @@ class Instrument:
     kind: Kind
     active_status: bool
     creation_timestamp: int
+
+    @property
+    def is_direct(self) -> bool:
+        if self.underlying_currency.lower() != self.margin_currency.lower():
+            return True
+        return False

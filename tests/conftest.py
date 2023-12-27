@@ -1,13 +1,8 @@
-import asyncio
-
 import pytest
+from aioresponses import aioresponses
 
 
-@pytest.fixture(scope='session')
-def event_loop() -> asyncio.AbstractEventLoop:
-    try:
-        return asyncio.get_running_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        return loop
+@pytest.fixture(autouse=True)
+def server_mock() -> "aioresponses":
+    with aioresponses() as server:
+        yield server

@@ -1,15 +1,33 @@
 import pytest
+from aioresponses import aioresponses
 
-from cryptoapi.clients.http import BaseHTTPClient, BaseHTTPClientError
-
-
-async def test_success_response() -> None:
-    client = BaseHTTPClient()
-    payload = await client.get("https://test.deribit.com/api/v2/public/get_index_price?index_name=ada_usd")
-    assert payload["jsonrpc"] == "2.0"
+from cryptoapi.clients.http import BaseHTTPClient, HTTPClientError
 
 
-async def test_base_error() -> None:
-    client = BaseHTTPClient()
-    with pytest.raises(BaseHTTPClientError):
-        await client.get("https://test.deribit.com/api/v2/public/get_index_price?index_name=error")
+async def test_get_success_response(server_mock: "aioresponses") -> None:
+    # Arrange
+    expected_payload = {"status": "success"}
+    server_mock.get("https://example.com", payload=expected_payload, status=200)
+    # Act
+    async with BaseHTTPClient() as client:
+        payload = await client.get("https://example.com")
+        # Assert
+        assert payload == expected_payload
+
+
+async def test_post_success_response(server_mock: "aioresponses") -> None:
+    # Arrange
+    expected_payload = {"status": "success"}
+    server_mock.post("https://example.com", payload=expected_payload, status=200)
+    # Act
+    async with BaseHTTPClient() as client:
+        payload = await client.post("https://example.com")
+        # Assert
+        assert payload == expected_payload
+
+
+async def test_base_error(server_mock: "aioresponses") -> None:
+    server_mock.get("https://example.com", payload={"status": "error"}, status=400)
+    with pytest.raises(HTTPClientError):
+        async with BaseHTTPClient() as client:
+            await client.get("https://example.com")

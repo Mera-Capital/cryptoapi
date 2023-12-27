@@ -1,7 +1,7 @@
-from .exceptions import BaseHTTPClientError
+from .exceptions import HTTPClientError
 from .base import BaseHTTPClient
 
 __all__ = [
     "BaseHTTPClient",
-    "BaseHTTPClientError",
+    "HTTPClientError",
 ]

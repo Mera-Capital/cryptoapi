@@ -7,7 +7,7 @@ from aiohttp import ClientSession, TCPConnector, ClientTimeout
 from aiohttp.typedefs import StrOrURL
 
 from cryptoapi.api.protocols import HTTPClientProtocol
-from .exceptions import BaseHTTPClientError
+from .exceptions import HTTPClientError
 
 
 class BaseHTTPClient(HTTPClientProtocol):
@@ -59,7 +59,7 @@ class BaseHTTPClient(HTTPClientProtocol):
         async with self._get_session().get(url, headers=headers) as response:
             payload = await response.json()
             if response.status != self.ok_status:
-                raise BaseHTTPClientError(response, payload)
+                raise HTTPClientError(response, payload)
             return payload
 
     async def post(
@@ -78,7 +78,7 @@ class BaseHTTPClient(HTTPClientProtocol):
         async with self._get_session().post(url, data=body, headers=headers) as response:
             payload = await response.json()
             if response.status != self.ok_status:
-                raise BaseHTTPClientError(response, payload)
+                raise HTTPClientError(response, payload)
             return payload
 
     async def close(self) -> None:
