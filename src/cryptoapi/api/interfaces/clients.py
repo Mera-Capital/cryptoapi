@@ -4,7 +4,7 @@ from abc import abstractmethod
 from aiohttp.typedefs import StrOrURL
 
 
-class HTTPClientProtocol(Protocol):
+class HTTPClientInterface(Protocol):
     @abstractmethod
     async def get(
             self,

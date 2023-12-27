@@ -15,7 +15,7 @@ from cryptoapi.api.entities import (
 )
 
 
-class ExchangeProtocol(Protocol):
+class ExchangeInterface(Protocol):
     # Public methods
     @abstractmethod
     async def get_instruments(self) -> list[Instrument]:

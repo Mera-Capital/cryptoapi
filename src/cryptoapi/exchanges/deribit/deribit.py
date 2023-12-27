@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from cryptoapi.api.protocols import ExchangeProtocol, HTTPClientProtocol
+from cryptoapi.api.interfaces import ExchangeInterface, HTTPClientInterface
 from cryptoapi.api.entities import (
     Instrument, Section, Timeframe,
     Candle,
@@ -17,8 +17,8 @@ from .url import DeribitURL
 from .mapping import _DERIBIT_MAPPER
 
 
-class Deribit(DeribitClient, ExchangeProtocol):
-    def __init__(self, testnet: bool, client: HTTPClientProtocol) -> None:
+class Deribit(DeribitClient, ExchangeInterface):
+    def __init__(self, testnet: bool, client: HTTPClientInterface) -> None:
         super().__init__(client)
         self._url = DeribitURL(testnet)
         self._mapper = _DERIBIT_MAPPER

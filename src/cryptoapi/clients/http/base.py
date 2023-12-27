@@ -6,11 +6,11 @@ import certifi
 from aiohttp import ClientSession, TCPConnector, ClientTimeout
 from aiohttp.typedefs import StrOrURL
 
-from cryptoapi.api.protocols import HTTPClientProtocol
+from cryptoapi.api.interfaces import HTTPClientInterface
 from .exceptions import HTTPClientError
 
 
-class BaseHTTPClient(HTTPClientProtocol):
+class BaseHTTPClient(HTTPClientInterface):
     def __init__(
             self,
             timeout: int | None = None,
@@ -51,7 +51,7 @@ class BaseHTTPClient(HTTPClientProtocol):
             headers: dict[str, Any] | None = None,
     ) -> Any:
         """
-        Closes current session
+        GET request
         :param url: URL to GET request
         :param headers: Optional headers
         :return Any: JSON payload
@@ -69,7 +69,7 @@ class BaseHTTPClient(HTTPClientProtocol):
             headers: dict[str, Any] | None = None,
     ) -> Any:
         """
-        Closes current session
+        POST request
         :param url: URL to POST request
         :param body: Optional payload
         :param headers: Optional headers
