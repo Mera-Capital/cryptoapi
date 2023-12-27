@@ -1,5 +1,5 @@
-from .api.protocols import ExchangeProtocol
+from .api.interfaces import ExchangeInterface
 
 __all__ = [
-    "ExchangeProtocol",
+    "ExchangeInterface",
 ]

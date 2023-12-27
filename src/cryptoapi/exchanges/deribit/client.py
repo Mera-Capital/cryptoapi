@@ -4,11 +4,11 @@ from abc import abstractmethod
 from aiohttp.typedefs import StrOrURL
 
 from cryptoapi.api.exceptions import BadResponseAPIError, TimeoutAPIError
-from cryptoapi.api.protocols import HTTPClientProtocol
+from cryptoapi.api.interfaces import HTTPClientInterface
 from cryptoapi.clients.http import HTTPClientError
 
 
-class DeribitJRPCProtocol(Protocol):
+class DeribitJRPCInterface(Protocol):
     @abstractmethod
     async def get(
             self,
@@ -18,8 +18,8 @@ class DeribitJRPCProtocol(Protocol):
         raise NotImplementedError
 
 
-class DeribitClient(DeribitJRPCProtocol):
-    def __init__(self, client: HTTPClientProtocol) -> None:
+class DeribitClient(DeribitJRPCInterface):
+    def __init__(self, client: HTTPClientInterface) -> None:
         self._client = client
 
     async def get(self, url: StrOrURL, headers: dict[str, Any] | None = None) -> dict[str, Any]:
