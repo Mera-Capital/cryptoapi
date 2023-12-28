@@ -53,8 +53,9 @@ class Deribit(DeribitClient, ExchangeInterface):
         raw_result = await self.get(url)
         return _candle_converter(raw_result)
 
-    async def get_quotes(self, instrument_title: str, section: Section) -> Quotes:  # type: ignore[empty-body]
-        pass
+    async def get_quotes(self, instrument_title: str, section: Section) -> Quotes:
+        raw_result = await self.get(self._url.quotes.format(instrument_name=instrument_title))
+        return self._mapper.load(raw_result, Quotes)
 
     async def get_index_price(self, currency_pair: str, section: Section) -> CurrencyIndexPrice:  # type: ignore[empty-body] # noqa #E501
         pass
