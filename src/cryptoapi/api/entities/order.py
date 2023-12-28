@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class OrderType(str, Enum):
-    SPOT = "spot"
+    MARKET = "market"
     LIMIT = "limit"
 
 

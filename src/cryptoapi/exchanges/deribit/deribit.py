@@ -87,23 +87,29 @@ class Deribit(DeribitClient, ExchangeInterface):
         raw_result = await self.get(url, headers=await self._get_headers(creds))
         return CommandStatus(success=bool(raw_result["order"]["order_state"] == "filled"), payload=raw_result["order"])
 
-    async def buy(  # type: ignore[empty-body]
+    async def buy(
             self,
             amount: Decimal,
             order_type: OrderType,
             instrument: Instrument,
             creds: dict[str, str],
     ) -> OrderInfo:
-        pass
+        amount = self._round_order_amount(amount, instrument)
+        url = self._url.buy.format(amount=amount, instrument_name=instrument.title, order_type=order_type.value)
+        raw_result = await self.get(url, headers=await self._get_headers(creds))
+        return self._mapper.load(raw_result["order"], OrderInfo)
 
-    async def sell(  # type: ignore[empty-body]
+    async def sell(
             self,
             amount: Decimal,
             order_type: OrderType,
             instrument: Instrument,
             creds: dict[str, str],
     ) -> OrderInfo:
-        pass
+        amount = self._round_order_amount(amount, instrument)
+        url = self._url.sell.format(amount=amount, instrument_name=instrument.title, order_type=order_type.value)
+        raw_result = await self.get(url, headers=await self._get_headers(creds))
+        return self._mapper.load(raw_result["order"], OrderInfo)
 
     async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:  # TODO: add tests
         client_id, client_secret, creds_key = self._parse_creds(creds)
@@ -143,3 +149,9 @@ class Deribit(DeribitClient, ExchangeInterface):
         client_id, client_secret = creds["client_id"], creds["client_secret"]
         creds_key = client_id + client_secret
         return client_id, client_secret, creds_key
+
+    @staticmethod
+    def _round_order_amount(amount: Decimal, instrument: Instrument) -> Decimal:
+        if instrument.is_direct:
+            return amount.quantize(Decimal('1.00'))  # TODO: make rounding for all currencies
+        return (amount / instrument.min_trade_amount * instrument.min_trade_amount).quantize(Decimal('1.00'))

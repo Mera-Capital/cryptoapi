@@ -3,7 +3,7 @@ from typing import Any
 
 from adaptix import name_mapping, Retort, loader, P
 
-from cryptoapi.api.entities import Instrument, Candle, Quotes, CurrencyIndexPrice, Equity, Position
+from cryptoapi.api.entities import Instrument, Candle, Quotes, CurrencyIndexPrice, Equity, Position, OrderInfo
 from cryptoapi.tools.mapper import Mapper
 
 
@@ -32,6 +32,16 @@ _DERIBIT_RETORT = Retort(
         loader(P[CurrencyIndexPrice].index_price, _decimal_converter),
         name_mapping(Equity, map={"size": "equity"}),
         loader(P[Equity].size, _decimal_converter),
+        name_mapping(OrderInfo, map={
+            "state": "order_state",
+            "instrument_title": "instrument_name",
+            "original_amount": "amount",
+            "executed_amount": "filled_amount",
+            "type": "order_type",
+        }),
+        loader(P[OrderInfo].executed_amount, _decimal_converter),
+        loader(P[OrderInfo].average_price, _decimal_converter),
+        loader(P[OrderInfo].original_amount, _decimal_converter),
     ]
 )
 
