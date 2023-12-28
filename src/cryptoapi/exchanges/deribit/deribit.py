@@ -23,6 +23,7 @@ class Deribit(DeribitClient, ExchangeInterface):
         super().__init__(client)
         self._url = DeribitURL(testnet)
         self._mapper = _DERIBIT_MAPPER
+        self._tokens: dict[str, dict[str, int | str]] = {}
 
     async def get_instruments(self) -> list[Instrument]:
         async with asyncio.TaskGroup() as tg:

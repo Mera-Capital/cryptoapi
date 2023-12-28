@@ -5,6 +5,11 @@ from adaptix import name_mapping, Retort, loader, P
 from cryptoapi.api.entities import Instrument, Candle, Quotes, CurrencyIndexPrice
 from cryptoapi.tools.mapper import Mapper
 
+
+def _decimal_converter(raw: int | str | float) -> Decimal:
+    return Decimal(str(raw))
+
+
 _DERIBIT_RETORT = Retort(
     recipe=[
         name_mapping(Instrument, map=[{
@@ -18,12 +23,12 @@ _DERIBIT_RETORT = Retort(
             "active_status": ("model", "is_active"),
         }, (".*", ("model", ...))]),
         loader(P[Instrument].commission_percent, lambda x: Decimal(str(x * 100))),
-        loader(P[Instrument].min_trade_amount, lambda x: Decimal(str(x))),
-        loader(P[Instrument].contract_size, lambda x: Decimal(str(x))),
+        loader(P[Instrument].min_trade_amount, _decimal_converter),
+        loader(P[Instrument].contract_size, _decimal_converter),
         name_mapping(Quotes, map={"markup_price": "mark_price"}),
-        loader(P[Quotes].index_price, lambda x: Decimal(str(x))),
-        loader(P[Quotes].markup_price, lambda x: Decimal(str(x))),
-        loader(P[CurrencyIndexPrice].index_price, lambda x: Decimal(str(x))),
+        loader(P[Quotes].index_price, _decimal_converter),
+        loader(P[Quotes].markup_price, _decimal_converter),
+        loader(P[CurrencyIndexPrice].index_price, _decimal_converter),
     ]
 )
 
