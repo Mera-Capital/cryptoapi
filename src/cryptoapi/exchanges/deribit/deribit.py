@@ -53,28 +53,28 @@ class Deribit(DeribitClient, ExchangeInterface):
         raw_result = await self.get(url)
         return _candle_converter(raw_result)
 
-    async def get_quotes(self, instrument_title: str, section: Section) -> Quotes:
+    async def get_quotes(self, instrument_title: str, section: Section) -> Quotes:  # type: ignore[empty-body]
         pass
 
-    async def get_index_price(self, currency_pair: str, section: Section) -> CurrencyIndexPrice:
+    async def get_index_price(self, currency_pair: str, section: Section) -> CurrencyIndexPrice:  # type: ignore[empty-body] # noqa #E501
         pass
 
-    async def get_equity(self, currency: str, section: Section, creds: dict[str, str]) -> Equity:
+    async def get_equity(self, currency: str, section: Section, creds: dict[str, str]) -> Equity:  # type: ignore[empty-body] # noqa #E501
         pass
 
-    async def get_position(self, instrument: Instrument, creds: dict[str, str]) -> Position:
+    async def get_position(self, instrument: Instrument, creds: dict[str, str]) -> Position:  # type: ignore[empty-body]
         pass
 
-    async def get_operations_summary(self, instrument: Instrument, creds: dict[str, str]) -> OperationsSummary:
+    async def get_operations_summary(self, instrument: Instrument, creds: dict[str, str]) -> OperationsSummary:  # type: ignore[empty-body] # noqa #E501
         pass
 
-    async def cancel_all_orders(self, instrument: Instrument, creds: dict[str, str]) -> CommandStatus:
+    async def cancel_all_orders(self, instrument: Instrument, creds: dict[str, str]) -> CommandStatus:  # type: ignore[empty-body] # noqa #E501
         pass
 
-    async def close_position(self, instrument: Instrument, creds: dict[str, str]) -> CommandStatus:
+    async def close_position(self, instrument: Instrument, creds: dict[str, str]) -> CommandStatus:  # type: ignore[empty-body] # noqa #E501
         pass
 
-    async def buy(
+    async def buy(  # type: ignore[empty-body]
             self,
             amount: Decimal,
             order_type: OrderType,
@@ -83,7 +83,7 @@ class Deribit(DeribitClient, ExchangeInterface):
     ) -> OrderInfo:
         pass
 
-    async def sell(
+    async def sell(  # type: ignore[empty-body]
             self,
             amount: Decimal,
             order_type: OrderType,
@@ -92,5 +92,5 @@ class Deribit(DeribitClient, ExchangeInterface):
     ) -> OrderInfo:
         pass
 
-    async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:
+    async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:  # type: ignore[empty-body]
         pass
