@@ -2,7 +2,7 @@ from decimal import Decimal
 
 import pytest
 
-from cryptoapi.api.entities import Section, Position, Instrument
+from cryptoapi.api.entities import Position, Instrument
 from cryptoapi.exchanges.deribit import Deribit
 from tests.integration.deribit.fixtures import BTC_PERPETUAL_CORRECT, BTC_PERPETUAL_IS_DIRECT
 from tests.mocks import MockServer
