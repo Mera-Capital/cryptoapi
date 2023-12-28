@@ -14,9 +14,11 @@ from cryptoapi.api.entities import (
     OrderType, OrderInfo,
 )
 from .client import DeribitClient
+from .constants import INVALID_CREDS_CODE
 from .url import DeribitURL
 from .mapping import _DERIBIT_MAPPER, _candle_converter, _position_converter
 from .access import AccessToken
+from ...api.exceptions import BadResponseAPIError
 
 
 class Deribit(DeribitClient, ExchangeInterface):
@@ -103,18 +105,41 @@ class Deribit(DeribitClient, ExchangeInterface):
     ) -> OrderInfo:
         pass
 
-    async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:  # type: ignore[empty-body]
-        pass
+    async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:  # TODO: add tests
+        client_id, client_secret, creds_key = self._parse_creds(creds)
+        token = self._get_token(creds_key)
+        if not token:
+            try:
+                token = await self._auth(client_id, client_secret)
+                self._set_token(creds_key, token)
+            except BadResponseAPIError as err:
+                if err.error_code == INVALID_CREDS_CODE:
+                    return CommandStatus(False, payload={"message": err.message})
+                raise err from err
+        if token and not token.scope_is_valid:
+            return CommandStatus(False, payload={"message": "invalid scope"})
+        return CommandStatus(True, payload={"message": "credentials is valid"})
 
     async def _auth(self, client_id: str, client_secret: str) -> AccessToken:
         raw_result = await self.get(self._url.auth.format(client_id=client_id, client_secret=client_secret))
         return AccessToken.create(raw_result)
 
     async def _get_headers(self, creds: dict[str, str]) -> dict[str, str]:
-        client_id, client_secret = creds["client_id"], creds["client_secret"]
-        creds_key = client_id + client_secret
-        token = self._tokens_store.get(creds_key)
+        client_id, client_secret, creds_key = self._parse_creds(creds)
+        token = self._get_token(creds_key)
         if (token is not None and token.is_expire) or token is None:
             token = await self._auth(client_id, client_secret)
-            self._tokens_store[creds_key] = token
+            self._set_token(creds_key, token)
         return {"Authorization": f"Bearer {token.access_token}", "Content-Type": "application/json"}
+
+    def _get_token(self, creds_key: str) -> AccessToken | None:
+        return self._tokens_store.get(creds_key)
+
+    def _set_token(self, creds_key: str, token: AccessToken) -> None:
+        self._tokens_store[creds_key] = token
+
+    @staticmethod
+    def _parse_creds(creds: dict[str, str]) -> tuple[str, str, str]:
+        client_id, client_secret = creds["client_id"], creds["client_secret"]
+        creds_key = client_id + client_secret
+        return client_id, client_secret, creds_key
