@@ -1,16 +1,16 @@
-from .instrument import Instrument, Section, Kind, Timeframe
-from .candle import Candle
-from .quotes import Quotes
-from .index_price import CurrencyIndexPrice
-from .position import Position
-from .equity import Equity
-from .operations import OperationsSummary
+from .candle import Candle, ClosedTimeframeEvent
 from .command import CommandStatus
+from .equity import Equity
+from .index_price import CurrencyIndexPrice
+from .instrument import Instrument, Section, Kind, Timeframe
+from .operations import OperationsSummary
 from .order import OrderInfo, OrderType, OrderState, OrderDirection
+from .position import Position
+from .quotes import Quotes
 
 __all__ = [
     "Instrument", "Section", "Kind", "Timeframe",
-    "Candle",
+    "Candle", "ClosedTimeframeEvent",
     "Quotes",
     "CurrencyIndexPrice",
     "Position",

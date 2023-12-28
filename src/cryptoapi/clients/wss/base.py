@@ -69,6 +69,10 @@ class BaseWSSClient(WSSClientInterface):
         """
         return await websockets.connect(self._uri)
 
+    async def __aiter__(self) -> "BaseWSSClient":
+        await self._get_socket()
+        return self
+
     async def __aenter__(self) -> "BaseWSSClient":
         await self._get_socket()
         return self
