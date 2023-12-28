@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from adaptix import name_mapping, Retort, loader, P
 
-from cryptoapi.api.entities import Instrument, Candle, Quotes
+from cryptoapi.api.entities import Instrument, Candle, Quotes, CurrencyIndexPrice
 from cryptoapi.tools.mapper import Mapper
 
 _DERIBIT_RETORT = Retort(
@@ -23,6 +23,7 @@ _DERIBIT_RETORT = Retort(
         name_mapping(Quotes, map={"markup_price": "mark_price"}),
         loader(P[Quotes].index_price, lambda x: Decimal(str(x))),
         loader(P[Quotes].markup_price, lambda x: Decimal(str(x))),
+        loader(P[CurrencyIndexPrice].index_price, lambda x: Decimal(str(x))),
     ]
 )
 
