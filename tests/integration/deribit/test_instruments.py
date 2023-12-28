@@ -11,12 +11,10 @@ async def test_instruments(deribit: Deribit, server_mock: MockServer) -> None:
     expected_last = Instrument(
         title="ETH_USDT-PERPETUAL",
         section=Section.MAIN,
-        expire_period="perpetual",
         underlying_currency="ETH",
         margin_currency="USDT",
         quoted_currency="USDT",
         contract_size=Decimal("0.01"),
-        commission_percent=Decimal("0.05"),
         min_trade_amount=Decimal("0.01"),
         kind=Kind.FUTURE,
         active_status=True,

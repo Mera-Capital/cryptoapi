@@ -26,7 +26,7 @@ class BaseHTTPClient(HTTPClientInterface):
         self._connector = TCPConnector(ssl=self._ssl_context, limit=connection_limit)
         self._timeout = ClientTimeout(total=timeout)
         self._session = self._create_session()
-        self.ok_status = 200
+        self.bad_status = 400
 
     def _get_session(self) -> ClientSession:
         """
@@ -58,7 +58,7 @@ class BaseHTTPClient(HTTPClientInterface):
         """
         async with self._get_session().get(url, headers=headers) as response:
             payload = await response.json()
-            if response.status != self.ok_status:
+            if response.status >= self.bad_status:
                 raise HTTPClientError(response, payload)
             return payload
 
@@ -77,7 +77,7 @@ class BaseHTTPClient(HTTPClientInterface):
         """
         async with self._get_session().post(url, data=body, headers=headers) as response:
             payload = await response.json()
-            if response.status != self.ok_status:
+            if response.status >= self.bad_status:
                 raise HTTPClientError(response, payload)
             return payload
 

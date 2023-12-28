@@ -26,16 +26,14 @@ class Timeframe(int, Enum):
 class Instrument:
     title: str
     section: Section
-    expire_period: str
     underlying_currency: str
     margin_currency: str
     quoted_currency: str
-    contract_size: Decimal
-    commission_percent: Decimal
-    min_trade_amount: Decimal
     kind: Kind
     active_status: bool
-    creation_timestamp: int
+    creation_timestamp: int | None = None
+    min_trade_amount: Decimal | None = None
+    contract_size: Decimal | None = None
 
     @property
     def is_direct(self) -> bool:
