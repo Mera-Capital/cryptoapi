@@ -1,8 +1,9 @@
 from decimal import Decimal
+from typing import Any
 
 from adaptix import name_mapping, Retort, loader, P
 
-from cryptoapi.api.entities import Instrument, Candle, Quotes, CurrencyIndexPrice, Equity
+from cryptoapi.api.entities import Instrument, Candle, Quotes, CurrencyIndexPrice, Equity, Position
 from cryptoapi.tools.mapper import Mapper
 
 
@@ -42,3 +43,9 @@ def _candle_converter(raw: dict[str, list[str | float | int]]) -> list[Candle]:
     for ts, o, h, l, c in zip(raw["ticks"], raw["open"], raw["high"], raw["low"], raw["close"]):
         candles.append(Candle(int(ts), Decimal(str(o)), Decimal(str(h)), Decimal(str(l)), Decimal(str(c))))
     return candles
+
+
+def _position_converter(raw: dict[str, Any], instrument: Instrument) -> Position:
+    if instrument.is_direct:
+        return Position(size=Decimal(str(raw["size_currency"])))
+    return Position(size=Decimal(str(raw["size"])))

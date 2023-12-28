@@ -15,7 +15,7 @@ from cryptoapi.api.entities import (
 )
 from .client import DeribitClient
 from .url import DeribitURL
-from .mapping import _DERIBIT_MAPPER, _candle_converter
+from .mapping import _DERIBIT_MAPPER, _candle_converter, _position_converter
 from .access import AccessToken
 
 
@@ -67,8 +67,10 @@ class Deribit(DeribitClient, ExchangeInterface):
         raw_result = await self.get(self._url.equity.format(currency=currency), headers=await self._get_headers(creds))
         return self._mapper.load(raw_result, Equity)
 
-    async def get_position(self, instrument: Instrument, creds: dict[str, str]) -> Position:  # type: ignore[empty-body]
-        pass
+    async def get_position(self, instrument: Instrument, creds: dict[str, str]) -> Position:
+        url = self._url.position.format(instrument_name=instrument.title)
+        raw_result = await self.get(url, headers=await self._get_headers(creds))
+        return _position_converter(raw_result, instrument)
 
     async def get_operations_summary(self, instrument: Instrument, creds: dict[str, str]) -> OperationsSummary:  # type: ignore[empty-body] # noqa #E501
         pass
