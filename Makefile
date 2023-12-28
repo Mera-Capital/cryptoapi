@@ -7,7 +7,7 @@ help:
 
 .PHONY: install
 install: ## Install package with dependencies
-	poetry install --with dev --no-root
+	poetry install --with dev
 
 .PHONY: lint
 lint: ## Lint code
