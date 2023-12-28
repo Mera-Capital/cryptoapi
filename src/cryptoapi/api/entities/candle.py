@@ -4,7 +4,7 @@ from decimal import Decimal
 
 @dataclass(slots=True, frozen=True)
 class Candle:
-    timestamps: int
+    timestamp: int
     open: Decimal
     high: Decimal
     low: Decimal

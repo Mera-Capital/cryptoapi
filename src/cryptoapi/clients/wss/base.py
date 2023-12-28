@@ -1,5 +1,6 @@
 import json
-from typing import Any
+from types import TracebackType
+from typing import Any, Type
 
 import websockets
 
@@ -68,9 +69,14 @@ class BaseWSSClient(WSSClientInterface):
         """
         return await websockets.connect(self._uri)
 
-    async def __aenter__(self) -> 'BaseWSSClient':
+    async def __aenter__(self) -> "BaseWSSClient":
         await self._get_socket()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+    async def __aexit__(
+            self,
+            exc_type: Type[BaseException] | None,
+            exc_val: BaseException | None,
+            exc_tb: TracebackType | None,
+    ) -> None:
         await self.close()

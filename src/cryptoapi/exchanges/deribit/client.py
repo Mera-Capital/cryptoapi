@@ -25,7 +25,7 @@ class DeribitClient(DeribitJRPCInterface):
     async def get(self, url: StrOrURL, headers: dict[str, Any] | None = None) -> dict[str, Any]:
         try:
             payload = await self._client.get(url, headers=headers)
-            return payload["result"]
+            return payload["result"]  # type: ignore[no-any-return]
         except HTTPClientError as err:
             raise BadResponseAPIError() from err
         except TimeoutError as err:

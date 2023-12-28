@@ -15,7 +15,7 @@ from cryptoapi.api.entities import (
 )
 from .client import DeribitClient
 from .url import DeribitURL
-from .mapping import _DERIBIT_MAPPER
+from .mapping import _DERIBIT_MAPPER, _candle_converter
 
 
 class Deribit(DeribitClient, ExchangeInterface):
@@ -44,7 +44,14 @@ class Deribit(DeribitClient, ExchangeInterface):
             date_from: int,
             date_to: int,
     ) -> list[Candle]:
-        pass
+        url = self._url.candles.format(
+            instrument_name=instrument_title,
+            resolution=timeframe.value,
+            start_timestamp=date_from,
+            end_timestamp=date_to,
+        )
+        raw_result = await self.get(url)
+        return _candle_converter(raw_result)
 
     async def get_quotes(self, instrument_title: str, section: Section) -> Quotes:
         pass

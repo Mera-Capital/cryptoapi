@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from adaptix import name_mapping, Retort, loader, P
 
-from cryptoapi.api.entities import Instrument
+from cryptoapi.api.entities import Instrument, Candle
 from cryptoapi.tools.mapper import Mapper
 
 _DERIBIT_RETORT = Retort(
@@ -24,3 +24,10 @@ _DERIBIT_RETORT = Retort(
 )
 
 _DERIBIT_MAPPER = Mapper(_DERIBIT_RETORT)
+
+
+def _candle_converter(raw: dict[str, list[str | float | int]]) -> list[Candle]:
+    candles = []
+    for ts, o, h, l, c in zip(raw["ticks"], raw["open"], raw["high"], raw["low"], raw["close"]):
+        candles.append(Candle(int(ts), Decimal(str(o)), Decimal(str(h)), Decimal(str(l)), Decimal(str(c))))
+    return candles

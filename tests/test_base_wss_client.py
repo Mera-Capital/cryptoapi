@@ -3,7 +3,7 @@ import json
 from cryptoapi.clients.wss import BaseWSSClient
 
 
-async def est_connect_ws() -> None:
+async def test_connect_ws() -> None:
     # Arrange
     uri = "wss://dstream.binance.com/ws/btcusd_200925@aggTrade"
     msg = {"method": "SUBSCRIBE", "params": ["btcusd_perp@aggTrade"], "id": 1}
