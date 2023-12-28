@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from adaptix import name_mapping, Retort, loader, P
 
-from cryptoapi.api.entities import Instrument, Candle, Quotes, CurrencyIndexPrice
+from cryptoapi.api.entities import Instrument, Candle, Quotes, CurrencyIndexPrice, Equity
 from cryptoapi.tools.mapper import Mapper
 
 
@@ -29,6 +29,8 @@ _DERIBIT_RETORT = Retort(
         loader(P[Quotes].index_price, _decimal_converter),
         loader(P[Quotes].markup_price, _decimal_converter),
         loader(P[CurrencyIndexPrice].index_price, _decimal_converter),
+        name_mapping(Equity, map={"size": "equity"}),
+        loader(P[Equity].size, _decimal_converter),
     ]
 )
 

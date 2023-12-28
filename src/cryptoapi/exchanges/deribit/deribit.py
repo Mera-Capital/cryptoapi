@@ -63,8 +63,9 @@ class Deribit(DeribitClient, ExchangeInterface):
         raw_result = await self.get(self._url.index_price.format(index_name=currency_pair))
         return self._mapper.load(raw_result, CurrencyIndexPrice)
 
-    async def get_equity(self, currency: str, section: Section, creds: dict[str, str]) -> Equity:  # type: ignore[empty-body] # noqa #E501
-        pass
+    async def get_equity(self, currency: str, section: Section, creds: dict[str, str]) -> Equity:
+        raw_result = await self.get(self._url.equity.format(currency=currency), headers=await self._get_headers(creds))
+        return self._mapper.load(raw_result, Equity)
 
     async def get_position(self, instrument: Instrument, creds: dict[str, str]) -> Position:  # type: ignore[empty-body]
         pass
