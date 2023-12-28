@@ -16,6 +16,7 @@ from cryptoapi.api.entities import (
 from .client import DeribitClient
 from .url import DeribitURL
 from .mapping import _DERIBIT_MAPPER, _candle_converter
+from .access import AccessToken
 
 
 class Deribit(DeribitClient, ExchangeInterface):
@@ -23,7 +24,7 @@ class Deribit(DeribitClient, ExchangeInterface):
         super().__init__(client)
         self._url = DeribitURL(testnet)
         self._mapper = _DERIBIT_MAPPER
-        self._tokens: dict[str, dict[str, int | str]] = {}
+        self._tokens_store: dict[str, AccessToken] = {}
 
     async def get_instruments(self) -> list[Instrument]:
         async with asyncio.TaskGroup() as tg:
@@ -97,3 +98,16 @@ class Deribit(DeribitClient, ExchangeInterface):
 
     async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:  # type: ignore[empty-body]
         pass
+
+    async def _auth(self, client_id: str, client_secret: str) -> AccessToken:
+        raw_result = await self.get(self._url.auth.format(client_id=client_id, client_secret=client_secret))
+        return AccessToken.create(raw_result)
+
+    async def _get_headers(self, creds: dict[str, str]) -> dict[str, str]:
+        client_id, client_secret = creds["client_id"], creds["client_secret"]
+        creds_key = client_id + client_secret
+        token = self._tokens_store.get(creds_key)
+        if (token is not None and token.is_expire) or token is None:
+            token = await self._auth(client_id, client_secret)
+            self._tokens_store[creds_key] = token
+        return {"Authorization": f"Bearer {token.access_token}", "Content-Type": "application/json"}
