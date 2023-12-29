@@ -1,33 +1,23 @@
-import asyncio
-import json
-from decimal import Decimal
 from typing import Any
-
-from adaptix import Retort, name_mapping, loader
 
 from cryptoapi.api import entities
 from cryptoapi.clients.wss import BaseWSSClient
-
-RETORT = Retort(
-    recipe=[
-        name_mapping(entities.Candle, map={"timestamp": "tick"}),
-        loader(Decimal, lambda x: Decimal(x)),
-    ]
-)
+from cryptoapi.exchanges.deribit.mapping import _DERIBIT_MAPPER
 
 
 class WSSDeribitClient(BaseWSSClient):
     def __init__(self, uri: str):
         super().__init__(uri=uri)
-        self.mapper = RETORT
+        self.mapper = _DERIBIT_MAPPER
 
-    async def listen_socket(self) -> entities.ClosedTimeframeEvent:
-        response = json.loads(await self.socket.recv())
+    async def listen(self) -> entities.ClosedTimeframeEvent | None:
+        response = await self.listen_socket()
         if not response.get("result"):
             return self._pars_response_for_chart_data(response)
+        return None
 
     @staticmethod
-    def create_message_for_chart_data(instrument_name, timeframe: int) -> dict[str, Any]:
+    def create_message_for_chart_data(instrument_name: str, timeframe: int) -> dict[str, Any]:
         channel = [f'chart.trades.{instrument_name}.{timeframe}']
         return {
             "jsonrpc": "2.0",
@@ -47,13 +37,15 @@ class WSSDeribitClient(BaseWSSClient):
             candle=candle,
         )
 
-
-async def main():
-    async with WSSDeribitClient('wss://test.deribit.com/den/ws') as client:
-        message = client.create_message_for_chart_data('BTC-PERPETUAL', 1)
-        await client.subscribe(message)
-        while client.socket.open:
-            print(await client.listen_socket())
-
-
-asyncio.get_event_loop().run_until_complete(main())
+# async def main():
+#     async for client in WSSDeribitClient('wss://test.deribit.com/den/ws'):
+#         try:
+#             message = client.create_message_for_chart_data('BTC-PERPETUAL', 1)
+#             await client.subscribe(message)
+#             while client.socket.open:
+#                 print(await client.listen())
+#         except (ConnectionClosed, gaierror):
+#             continue
+#
+#
+# asyncio.get_event_loop().run_until_complete(main())

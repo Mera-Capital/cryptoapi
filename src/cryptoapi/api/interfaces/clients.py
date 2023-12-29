@@ -39,3 +39,7 @@ class WSSClientInterface(Protocol):
     @abstractmethod
     async def close(self) -> None:
         raise NotImplementedError
+
+    @abstractmethod
+    async def listen_socket(self) -> Any:
+        raise NotImplementedError

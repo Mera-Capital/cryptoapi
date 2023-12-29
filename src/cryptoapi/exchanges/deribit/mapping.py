@@ -1,9 +1,15 @@
 from decimal import Decimal
+from typing import Union
 
 from adaptix import name_mapping, Retort, loader, P
 
 from cryptoapi.api.entities import Instrument, Candle
 from cryptoapi.tools.mapper import Mapper
+
+
+def _decimal_converter(value: Union[str, int]) -> Decimal:
+    return Decimal(value)
+
 
 _DERIBIT_RETORT = Retort(
     recipe=[
@@ -20,6 +26,8 @@ _DERIBIT_RETORT = Retort(
         loader(P[Instrument].commission_percent, lambda x: Decimal(str(x * 100))),
         loader(P[Instrument].min_trade_amount, lambda x: Decimal(str(x))),
         loader(P[Instrument].contract_size, lambda x: Decimal(str(x))),
+        name_mapping(Candle, map={"timestamp": "tick"}),
+        loader(Decimal, _decimal_converter),
     ]
 )
 

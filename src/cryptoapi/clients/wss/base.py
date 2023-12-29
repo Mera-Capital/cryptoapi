@@ -1,4 +1,5 @@
 import json
+from time import sleep
 from types import TracebackType
 from typing import Any, Type
 
@@ -8,6 +9,7 @@ from cryptoapi.api.interfaces import WSSClientInterface
 
 
 class BaseWSSClient(WSSClientInterface):
+
     def __init__(self, uri: str) -> None:
         """
         Initializes the BaseWSSClient instance.
@@ -44,6 +46,15 @@ class BaseWSSClient(WSSClientInterface):
         socket = await self._get_socket()
         await socket.send(json.dumps(msg))
 
+    async def listen_socket(self) -> Any:
+        """
+        Listens to the socket and returns the received JSON data.
+        :param self: The current instance of the class.
+        :return: The received JSON data.
+        """
+        socket = await self._get_socket()
+        return json.loads(await socket.recv())
+
     async def close(self) -> None:
         """
         Closes the websocket connection if it exists.
@@ -69,10 +80,6 @@ class BaseWSSClient(WSSClientInterface):
         """
         return await websockets.connect(self._uri)
 
-    async def __aiter__(self) -> "BaseWSSClient":
-        await self._get_socket()
-        return self
-
     async def __aenter__(self) -> "BaseWSSClient":
         await self._get_socket()
         return self
@@ -84,3 +91,10 @@ class BaseWSSClient(WSSClientInterface):
             exc_tb: TracebackType | None,
     ) -> None:
         await self.close()
+
+    async def __anext__(self) -> "BaseWSSClient":
+        return self
+
+    def __aiter__(self) -> "BaseWSSClient":
+        sleep(10)
+        return self

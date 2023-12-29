@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from decimal import Decimal
+from typing import TYPE_CHECKING
 
-from cryptoapi.api import entities
+if TYPE_CHECKING:
+    from cryptoapi.api.entities import Timeframe, Instrument
 
 
 @dataclass(slots=True, frozen=True)
@@ -15,6 +17,6 @@ class Candle:
 
 @dataclass
 class ClosedTimeframeEvent:
-    timeframe: entities.Timeframe
-    instrument_title: entities.Instrument
+    timeframe: "Timeframe"
+    instrument_title: "Instrument"
     candle: Candle
