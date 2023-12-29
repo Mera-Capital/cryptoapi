@@ -27,6 +27,7 @@ class DeribitClient(DeribitJRPCInterface):
             payload = await self._client.get(url, headers=headers)
             return payload["result"]  # type: ignore[no-any-return]
         except HTTPClientError as err:
-            raise BadResponseAPIError() from err
+            error = err.payload.get("error", {"message": "unknown", "code": 0})
+            raise BadResponseAPIError(message=error["message"], error_code=error["code"]) from err
         except TimeoutError as err:
             raise TimeoutAPIError() from err

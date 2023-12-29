@@ -10,10 +10,10 @@ async def test_instruments(deribit: Deribit, server_mock: MockServer) -> None:
     expected_len = 790
     expected_last = Candle(
         timestamp=1703716200000,
-        open=Decimal('43550.0'),
-        high=Decimal('43581.5'),
-        low=Decimal('43388.0'),
-        close=Decimal('43388.0'),
+        open=Decimal("43550.0"),
+        high=Decimal("43581.5"),
+        low=Decimal("43388.0"),
+        close=Decimal("43388.0"),
     )
     url = deribit._url.candles.format(
         instrument_name="BTC-PERPETUAL",

@@ -1,0 +1,15 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "token_type": "bearer",
+    "sid": "49222.JKVidyEf.rest-7sAGB/YFJ8E=",
+    "scope": "trade:read_write wallet:read_write account:read_write custody:read_write session:rest-7sAGB/YFJ8E=",
+    "refresh_token": "1700830738153.1WfY8K6i.D0YztRJIRsqegkXS4M3eiWO6ZqAV3wEqIMYkckG8l47f71rbtOb617U5Bh2uEMfz67KhzOMo0oyxAIfZXKKniXJmYIyqyh4VvKROta0ZKy2KYmr958J8DRq46AUUtRM9g4bNzfWnqFtq9CbIgGLCowKsm9xJQjGWiGHHjrd0Adit7y4qMT6xzCTv9MwjPyD-cEWe4SdtsatGP_aL6eVJrWed5_PH6-W0KE2Tb-q4eN6hvLS2blCH_iJixA5K4yNpz8vKusIQCjeK-iMUE6Xn2O9Sx7W3mPqBBDbBg4YKSzxBHFVsjg",
+    "expires_in": 900,
+    "access_token": "1700226838153.1fbx54S5.rZqzQfCB7V9bOp5EvGQ94ZQNuD9i4AObnL8jXzjkC8b_TldJv0xDkOsNtUJnF7Da4kNmT5X-GI86ptAyp7c6OrCbMWmh-lZjdEpS7k2Yql3dBCdJXp731_D9vhCjIFpjlKkcIlSmsXL0cZwJGYuIAM-7KOcdxwngr4niLHhZBHKdjAuolui36NsIKK1DrpN532isV_uGxOUj_2LqOyE9x1kb9G5YCl7eg5sDri2VQr35HO2BbM-onml1oubfiSNn8CUlddYZVPyXOljH6lPjhkivrrHvCvXysg9hphkJm7DPfy9ewMg"
+  },
+  "usIn": 1700225938153048,
+  "usOut": 1700225938153449,
+  "usDiff": 401,
+  "testnet": true
+}

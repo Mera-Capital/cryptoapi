@@ -5,7 +5,6 @@ from enum import Enum
 
 class Kind(str, Enum):
     FUTURE = "future"
-    SPOT = "spot"
 
 
 class Section(str, Enum):

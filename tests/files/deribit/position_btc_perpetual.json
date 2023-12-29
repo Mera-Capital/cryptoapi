@@ -1,0 +1,29 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "estimated_liquidation_price": 15163.8,
+    "size_currency": 37.003581129,
+    "realized_funding": -0.0153264,
+    "total_profit_loss": 21.365774374,
+    "realized_profit_loss": -0.015326404,
+    "floating_profit_loss": -0.62769027,
+    "leverage": 46,
+    "average_price": 26851.42,
+    "mark_price": 42355.36,
+    "settlement_price": 43086.23,
+    "delta": 37.003581129,
+    "open_orders_margin": 0,
+    "interest_value": 0.28163110890658216,
+    "direction": "buy",
+    "maintenance_margin": 0.438499062,
+    "initial_margin": 0.808534871,
+    "instrument_name": "BTC-PERPETUAL",
+    "index_price": 42327.05,
+    "kind": "future",
+    "size": 1567300
+  },
+  "usIn": 1703780722964227,
+  "usOut": 1703780722964644,
+  "usDiff": 417,
+  "testnet": true
+}

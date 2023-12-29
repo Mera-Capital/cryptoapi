@@ -4,4 +4,4 @@ from decimal import Decimal
 
 @dataclass(slots=True, frozen=True)
 class Position:
-    amount: Decimal
+    size: Decimal
