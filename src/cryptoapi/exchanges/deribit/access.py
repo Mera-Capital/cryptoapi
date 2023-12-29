@@ -38,5 +38,5 @@ class AccessToken:
             if perm and perm not in value:
                 return False
             if not perm:
-                return True
+                return False
         return True

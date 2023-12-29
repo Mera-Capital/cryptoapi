@@ -127,12 +127,14 @@ class Deribit(DeribitClient, ExchangeInterface):
         raw_result = await self.get(url, headers=await self._get_headers(creds))
         return self._mapper.load(raw_result["order"], OrderInfo)
 
-    async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:  # TODO: add tests
+    async def check_credentials(self, creds: dict[str, str]) -> CommandStatus:
         client_id, client_secret, creds_key = self._parse_creds(creds)
         token = self._get_token(creds_key)
         if not token:
             try:
                 token = await self._auth(client_id, client_secret)
+                if not token.scope_is_valid:
+                    return CommandStatus(False, payload={"message": "invalid scope"})
                 self._set_token(creds_key, token)
             except BadResponseAPIError as err:
                 if err.error_code == INVALID_CREDS_CODE:

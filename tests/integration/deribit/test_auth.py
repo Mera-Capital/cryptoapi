@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 import pytest
 
 from cryptoapi.exchanges.deribit import Deribit
@@ -20,6 +18,12 @@ BAD_SCOPE = ("block_trade:read_write "
              "custody:read "
              "session:rest-64N+Ik5BE5M= "
              "mainaccount")
+BAD_SCOPE_PARTIAL = ("block_trade:read_write "
+                     "wallet:read "
+                     "account:read "
+                     "custody:read "
+                     "session:rest-64N+Ik5BE5M= "
+                     "mainaccount")
 ACCESS_TOKEN = AccessToken("access_token", "refresh_token", 1000, ms_utc(), SCOPE)
 
 
@@ -58,6 +62,7 @@ async def test_not_expire_auth(deribit: Deribit) -> None:
 @pytest.mark.parametrize("token, expected", [
     (AccessToken("access_token", "refresh_token", 1000, ms_utc(), SCOPE), True),
     (AccessToken("access_token", "refresh_token", 1000, ms_utc(), BAD_SCOPE), False),
+    (AccessToken("access_token", "refresh_token", 1000, ms_utc(), BAD_SCOPE_PARTIAL), False),
 ])
 def test_check_scope(token: AccessToken, expected: bool) -> None:
     assert token.scope_is_valid == expected
