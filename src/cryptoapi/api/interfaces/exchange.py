@@ -50,7 +50,13 @@ class ExchangeInterface(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_operations_summary(self, instrument: Instrument, creds: dict[str, str]) -> OperationsSummary:
+    async def get_operations_summary(
+            self,
+            instrument: Instrument,
+            date_from: int,
+            date_to: int,
+            creds: dict[str, str],
+    ) -> OperationsSummary:
         raise NotImplementedError
 
     @abstractmethod

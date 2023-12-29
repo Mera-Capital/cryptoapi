@@ -14,10 +14,11 @@ from cryptoapi.api.entities import (
     OrderType, OrderInfo,
 )
 from .client import DeribitClient
-from .constants import INVALID_CREDS_CODE
+from .constants import INVALID_CREDS_CODE, CONTRACT_VALUE_ROUNDING
 from .url import DeribitURL
-from .mapping import _DERIBIT_MAPPER, _candle_converter, _position_converter
+from .mapping import _DERIBIT_MAPPER, _candle_converter, _position_converter, _operations_summary_converter
 from .access import AccessToken
+from .operations import Operation, Transfer
 from ...api.exceptions import BadResponseAPIError
 
 
@@ -74,8 +75,23 @@ class Deribit(DeribitClient, ExchangeInterface):
         raw_result = await self.get(url, headers=await self._get_headers(creds))
         return _position_converter(raw_result, instrument)
 
-    async def get_operations_summary(self, instrument: Instrument, creds: dict[str, str]) -> OperationsSummary:  # type: ignore[empty-body] # noqa #E501
-        pass
+    async def get_operations_summary(
+            self,
+            instrument: Instrument,
+            date_from: int,
+            date_to: int,
+            creds: dict[str, str],
+    ) -> OperationsSummary:
+        headers = await self._get_headers(creds)
+        currency = instrument.margin_currency.upper()
+        async with asyncio.TaskGroup() as tg:
+            raw_withs = tg.create_task(self.get(self._url.withdrawals.format(currency=currency), headers))
+            raw_trans = tg.create_task(self.get(self._url.transfers.format(currency=currency), headers))
+            raw_deps = tg.create_task(self.get(self._url.deposits.format(currency=currency), headers))
+        withdrawals = self._mapper.load(raw_withs.result()["data"], list[Operation])
+        transfers = self._mapper.load(raw_trans.result()["data"], list[Transfer])
+        deposits = self._mapper.load(raw_deps.result()["data"], list[Operation])
+        return _operations_summary_converter(withdrawals, transfers, deposits, date_from)
 
     async def cancel_all_orders(self, instrument: Instrument, creds: dict[str, str]) -> CommandStatus:
         url = self._url.cancel_orders.format(instrument_name=instrument.title)
@@ -153,5 +169,8 @@ class Deribit(DeribitClient, ExchangeInterface):
     @staticmethod
     def _round_order_amount(amount: Decimal, instrument: Instrument) -> Decimal:
         if instrument.is_direct:
-            return amount.quantize(Decimal('1.00'))  # TODO: make rounding for all currencies
-        return (amount / instrument.min_trade_amount * instrument.min_trade_amount).quantize(Decimal('1.00'))
+            rounding = CONTRACT_VALUE_ROUNDING.get(instrument.underlying_currency)
+            if rounding:
+                return amount.quantize(rounding)
+            return amount
+        return amount / instrument.min_trade_amount * instrument.min_trade_amount
