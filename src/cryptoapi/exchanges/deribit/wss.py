@@ -3,11 +3,13 @@ from typing import Any
 from cryptoapi.api import entities
 from cryptoapi.clients.wss import BaseWSSClient
 from cryptoapi.exchanges.deribit.mapping import _DERIBIT_MAPPER
+from cryptoapi.exchanges.deribit.url import WSSDeribitURL
 
 
 class WSSDeribitClient(BaseWSSClient):
-    def __init__(self, uri: str):
-        super().__init__(uri=uri)
+    def __init__(self, testnet: bool):
+        self._url = WSSDeribitURL(testnet)
+        super().__init__(uri=self._url.base)
         self.mapper = _DERIBIT_MAPPER
 
     async def listen(self) -> entities.ClosedTimeframeEvent | None:

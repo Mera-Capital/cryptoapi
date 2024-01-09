@@ -1,14 +1,17 @@
+import asyncio
 from typing import Any
 
 from cryptoapi.api import entities
 from cryptoapi.clients.wss import BaseWSSClient
-from cryptoapi.exchanges.binance.usdm.mapping import _BINANCE_UM_MAPPER
+from cryptoapi.exchanges.binance.coinm.mapping import _BINANCE_CM_MAPPER
+from cryptoapi.exchanges.binance.coinm.url import WSSBinanceCMURL
 
 
-class WSSBinanceUMClient(BaseWSSClient):
-    def __init__(self, uri: str):
-        super().__init__(uri=uri)
-        self.mapper = _BINANCE_UM_MAPPER
+class WSSBinanceCMClient(BaseWSSClient):
+    def __init__(self, testnet: bool) -> None:
+        self._url = WSSBinanceCMURL(testnet)
+        super().__init__(uri=self._url.base)
+        self.mapper = _BINANCE_CM_MAPPER
 
     @staticmethod
     def create_message_for_chart_data(instrument_name: str, timeframe: int) -> dict[str, Any]:
@@ -31,12 +34,13 @@ class WSSBinanceUMClient(BaseWSSClient):
             candle=candle,
         )
 
-# async def main():
-#     async with WSSBinanceUMClient('wss://fstream.binance.com/ws') as client:
-#         message = client.create_message_for_chart_data('btcusdt', 1)
-#         await client.subscribe(message)
-#         while client.socket.open:
-#             print(await client.listen())
-#
-#
-# asyncio.get_event_loop().run_until_complete(main())
+
+async def main() -> None:
+    async with WSSBinanceCMClient(False) as client:
+        message = client.create_message_for_chart_data('btcusd_perp', 1)
+        await client.subscribe(message)
+        while client.socket.open:
+            print(await client.listen())
+
+
+asyncio.get_event_loop().run_until_complete(main())

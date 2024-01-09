@@ -29,3 +29,11 @@ class DeribitURL:
                                           "detailed=false&"
                                           "include_combos=true")
         self.close_position = self.base + "private/close_position?instrument_name={instrument_name}&type=market"
+
+
+class WSSDeribitURL:
+    def __init__(self, testnet: bool) -> None:
+        self.prod_url = "wss://www.deribit.com/den/ws"
+        self.test_url = "wss://test.deribit.com/den/ws"
+
+        self.base = self.test_url if testnet else self.prod_url
