@@ -31,7 +31,8 @@ class WSSDeribitClient(BaseWSSClient):
 
     def _pars_response_for_chart_data(self, response: dict[str, Any]) -> entities.ClosedTimeframeEvent:
         params = response["params"]
-        _, _, instrument_name, timeframe = params["channel"].split(".")
+        instrument_name = params["channel"].split(".")[-2]
+        timeframe = params["channel"].split(".")[-1]
         candle = self.mapper.load(params["data"], entities.Candle)
         return entities.ClosedTimeframeEvent(
             timeframe=entities.Timeframe(int(timeframe)),

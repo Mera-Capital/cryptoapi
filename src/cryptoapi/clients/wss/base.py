@@ -1,5 +1,5 @@
+import asyncio
 import json
-from time import sleep
 from types import TracebackType
 from typing import Any, Type
 
@@ -93,8 +93,8 @@ class BaseWSSClient(WSSClientInterface):
         await self.close()
 
     async def __anext__(self) -> "BaseWSSClient":
+        await asyncio.sleep(10)
         return self
 
     def __aiter__(self) -> "BaseWSSClient":
-        sleep(10)
         return self

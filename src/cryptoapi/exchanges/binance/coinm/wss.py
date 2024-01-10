@@ -1,4 +1,3 @@
-import asyncio
 from typing import Any
 
 from cryptoapi.api import entities
@@ -34,13 +33,12 @@ class WSSBinanceCMClient(BaseWSSClient):
             candle=candle,
         )
 
-
-async def main() -> None:
-    async with WSSBinanceCMClient(False) as client:
-        message = client.create_message_for_chart_data('btcusd_perp', 1)
-        await client.subscribe(message)
-        while client.socket.open:
-            print(await client.listen())
-
-
-asyncio.get_event_loop().run_until_complete(main())
+# async def main():
+#     async with WSSBinanceCMClient(True) as cli:
+#         message = cli.create_message_for_chart_data('BTCUSD_PERP', 1)
+#         await cli.subscribe(message)
+#         while cli.socket.open:
+#             print(await cli.listen())
+#
+#
+# asyncio.run(main())
