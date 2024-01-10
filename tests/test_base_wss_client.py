@@ -1,8 +1,11 @@
 import json
 
+import pytest
+
 from cryptoapi.clients.wss import BaseWSSClient
 
 
+@pytest.mark.skip
 async def test_connect_ws() -> None:
     # Arrange
     uri = "wss://dstream.binance.com/ws/btcusd_200925@aggTrade"

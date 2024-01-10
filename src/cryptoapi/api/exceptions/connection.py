@@ -10,6 +10,5 @@ class TimeoutAPIError(APIException):
 
 @dataclass(eq=False)
 class BadResponseAPIError(APIException):
-    reason: str = "unknown"
     message: str = "default message"
     error_code: int = 0

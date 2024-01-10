@@ -1,0 +1,64 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+  "trades": [
+    {
+      "liquidity": "T",
+      "self_trade": false,
+      "contracts": 1.0,
+      "risk_reducing": false,
+      "order_type": "market",
+      "fee_currency": "BTC",
+      "tick_direction": 0,
+      "matching_id": null,
+      "trade_seq": 108050465,
+      "trade_id": "182286401",
+      "profit_loss": 0.0,
+      "order_id": "19266884643",
+      "reduce_only": false,
+      "post_only": false,
+      "mark_price": 37774.34,
+      "api": true,
+      "instrument_name": "BTC-PERPETUAL",
+      "direction": "buy",
+      "mmp": false,
+      "fee": 1.3e-07,
+      "index_price": 37765.38,
+      "amount": 10.0,
+      "price": 37774.0,
+      "state": "filled",
+      "timestamp": 1701281954639
+    }
+  ],
+  "order": {
+    "is_liquidation": false,
+    "contracts": 1.0,
+    "risk_reducing": false,
+    "order_type": "market",
+    "creation_timestamp": 1701281954639,
+    "order_state": "filled",
+    "average_price": 37774.05,
+    "time_in_force": "good_til_cancelled",
+    "filled_amount": 10.0,
+    "max_show": 10.0,
+    "order_id": "19266884643",
+    "reduce_only": false,
+    "post_only": false,
+    "last_update_timestamp": 1701281954639,
+    "replaced": false,
+    "web": false,
+    "api": true,
+    "instrument_name": "BTC-PERPETUAL",
+    "direction": "buy",
+    "mmp": false,
+    "amount": 10.0,
+    "price": 38340.0,
+    "label": ""
+  }
+}
+,
+  "usIn": 1703785099521697,
+  "usOut": 1703785099525495,
+  "usDiff": 3798,
+  "testnet": true
+}
